@@ -58,6 +58,23 @@ const MediaGallery = ({ projectId, isOwner }) => {
     return ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
   };
 
+  const isZip = (fileName) => {
+    const ext = fileName.split('.').pop().toLowerCase();
+    return ['zip', 'rar', '7z', 'tar', 'gz'].includes(ext);
+  };
+
+  const isPdf = (fileName) => {
+    const ext = fileName.split('.').pop().toLowerCase();
+    return ext === 'pdf';
+  };
+
+  const getFileIcon = (fileName) => {
+    if (isImage(fileName)) return null;
+    if (isPdf(fileName)) return <File size={40} color="var(--color-rose)" />;
+    if (isZip(fileName)) return <FolderKanban size={40} color="var(--color-amber)" />;
+    return <File size={40} color="var(--color-text-400)" />;
+  };
+
   const getDownloadUrl = (fileName) => `${api.defaults.baseURL}/files/download/${fileName}`;
 
   if (loading) return null;
@@ -88,11 +105,11 @@ const MediaGallery = ({ projectId, isOwner }) => {
           {files.map((file) => (
             <div key={file.id} className="animate-scale-in" style={{ position: 'relative', borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--glass-border)' }}>
               
-              <div style={{ aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
                 {isImage(file.fileName) ? (
                   <img src={getDownloadUrl(file.fileName)} alt={file.fileName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <File size={32} color="var(--color-text-400)" />
+                  getFileIcon(file.fileName)
                 )}
               </div>
 
