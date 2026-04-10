@@ -85,6 +85,22 @@ const Register = () => {
             </div>
           </div>
 
+          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+            <label className="form-label">Password</label>
+            <div style={{ position: 'relative' }}>
+              <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-400)' }} />
+              <input
+                type="password"
+                required
+                className="form-input"
+                style={{ paddingLeft: '2.5rem' }}
+                value={formData.password}
+                onChange={(e) => update('password', e.target.value)}
+                placeholder="Min 6 characters"
+              />
+            </div>
+          </div>
+
           <div className="form-group" style={{ marginBottom: '2rem' }}>
             <label className="form-label">Account Type</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
