@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
 
 const Register = () => {
-  const [formData, setFormData] = useState({ fullName: '', email: '', password: '', role: 'ROLE_STUDENT' });
+  const [formData, setFormData] = useState({ fullName: '', email: '', password: '', role: 'STUDENT' });
   const [error, setError] = useState('');
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -15,7 +15,8 @@ const Register = () => {
       await register(formData);
       navigate('/dashboard');
     } catch (err) {
-      setError('Registration failed. Email might be in use.');
+      const msg = err.response?.data?.message || 'Registration failed. Email might be in use.';
+      setError(msg);
     }
   };
 
