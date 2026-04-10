@@ -8,11 +8,15 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
 import Portfolio from './pages/Portfolio';
+import AdminDashboard from './pages/AdminDashboard';
+import ProjectDetails from './pages/ProjectDetails';
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ children, role }) => {
   const { user, loading } = useContext(AuthContext);
   if (loading) return null;
-  return user ? children : <Navigate to="/login" />;
+  if (!user) return <Navigate to="/login" />;
+  if (role && user.role !== role) return <Navigate to="/dashboard" />;
+  return children;
 };
 
 const AppContent = () => {
@@ -33,8 +37,18 @@ const AppContent = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={
-            <PrivateRoute>
+            <PrivateRoute role="STUDENT">
               <Dashboard />
+            </PrivateRoute>
+          } />
+          <Route path="/admin" element={
+            <PrivateRoute role="ADMIN">
+              <AdminDashboard />
+            </PrivateRoute>
+          } />
+          <Route path="/project/:id" element={
+            <PrivateRoute>
+              <ProjectDetails />
             </PrivateRoute>
           } />
           <Route path="/portfolio/:id" element={<Portfolio />} />

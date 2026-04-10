@@ -28,22 +28,35 @@ const Navbar = () => {
         <div className="nav-links">
           {user ? (
             <>
-              <Link
-                to="/dashboard"
-                className="nav-link"
-                style={isActive('/dashboard') ? { color: 'var(--color-text-100)', background: 'rgba(255,255,255,0.06)' } : {}}
-              >
-                <LayoutDashboard size={15} />
-                Dashboard
-              </Link>
-              <Link
-                to={`/portfolio/${user.userId}`}
-                className="nav-link"
-                style={isActive(`/portfolio/${user.userId}`) ? { color: 'var(--color-text-100)', background: 'rgba(255,255,255,0.06)' } : {}}
-              >
-                <User size={15} />
-                Portfolio
-              </Link>
+              {user.role === 'ADMIN' ? (
+                <Link
+                  to="/admin"
+                  className="nav-link"
+                  style={isActive('/admin') ? { color: 'var(--color-text-100)', background: 'rgba(255,255,255,0.06)' } : {}}
+                >
+                  <LayoutDashboard size={15} />
+                  Admin Console
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="nav-link"
+                    style={isActive('/dashboard') ? { color: 'var(--color-text-100)', background: 'rgba(255,255,255,0.06)' } : {}}
+                  >
+                    <LayoutDashboard size={15} />
+                    Dashboard
+                  </Link>
+                  <Link
+                    to={`/portfolio/${user.userId}`}
+                    className="nav-link"
+                    style={isActive(`/portfolio/${user.userId}`) ? { color: 'var(--color-text-100)', background: 'rgba(255,255,255,0.06)' } : {}}
+                  >
+                    <User size={15} />
+                    Portfolio
+                  </Link>
+                </>
+              )}
               <button onClick={handleLogout} className="btn btn-ghost btn-sm" style={{ marginLeft: '0.5rem' }}>
                 <LogOut size={14} />
                 Logout

@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../AuthContext';
 import api from '../api';
-import { Plus, Trash2, ExternalLink, Github, Globe, FolderOpen, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Plus, Trash2, ExternalLink, Github, Globe, FolderOpen, X, Play } from 'lucide-react';
+import { Link, Navigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
+
+  if (user && user.role === 'ADMIN') {
+    return <Navigate to="/admin" />;
+  }
+
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -163,8 +168,8 @@ const Dashboard = () => {
                       </a>
                     )}
                   </div>
-                  <Link to={`/portfolio/${user.userId}`} className="btn btn-primary btn-sm">
-                    <ExternalLink size={13} /> View
+                  <Link to={`/project/${p.id}`} className="btn btn-primary btn-sm">
+                    <Play size={13} /> Manage
                   </Link>
                 </div>
               </div>
