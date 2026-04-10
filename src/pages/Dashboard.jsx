@@ -52,55 +52,58 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container animate-fade-in">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+    <div className="container">
+      <div className="animate-fade-in stagger-1" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4rem' }}>
         <div>
-          <h1 className="title-glow" style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Student Dashboard</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Welcome back, {user?.fullName}! Manage your active projects.</p>
+          <h1 className="title-glow" style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>Dashboard</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Welcome back, <span style={{color: 'var(--text-primary)'}}>{user?.fullName}</span>. Ready for your next breakthrough?</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-          <PlusCircle size={20} /> {showForm ? 'Cancel' : 'New Project'}
+        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)} style={{ padding: '1rem 2rem' }}>
+          <PlusCircle size={20} /> {showForm ? 'Cancel' : 'Initialize Project'}
         </button>
       </div>
 
       {showForm && (
-        <div className="glass-panel animate-fade-in" style={{ marginBottom: '2rem' }}>
-          <h3 style={{ marginBottom: '1.5rem' }}>Create New Project</h3>
-          <form onSubmit={createProject} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="glass-panel animate-fade-in" style={{ marginBottom: '3rem', border: '1px solid var(--accent-primary)' }}>
+          <h3 style={{ marginBottom: '2rem', fontSize: '1.8rem' }}>Initialize New Build</h3>
+          <form onSubmit={createProject} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
             <div className="input-group" style={{ gridColumn: 'span 2' }}>
-              <label className="input-label">Project Title</label>
-              <input type="text" required className="input-field" value={newProject.title} onChange={e => setNewProject({...newProject, title: e.target.value})} />
+              <label className="input-label">Project Identity</label>
+              <input type="text" required className="input-field" placeholder="e.g. Neural Nexus Platform" value={newProject.title} onChange={e => setNewProject({...newProject, title: e.target.value})} />
             </div>
             <div className="input-group" style={{ gridColumn: 'span 2' }}>
-              <label className="input-label">Description</label>
-              <textarea rows="3" required className="input-field" value={newProject.description} onChange={e => setNewProject({...newProject, description: e.target.value})}></textarea>
+              <label className="input-label">Technical Overview</label>
+              <textarea rows="4" required className="input-field" placeholder="Describe the stack, the mission, and the impact..." value={newProject.description} onChange={e => setNewProject({...newProject, description: e.target.value})}></textarea>
             </div>
             <div className="input-group">
-              <label className="input-label">GitHub URL (Optional)</label>
-              <input type="url" className="input-field" value={newProject.githubUrl} onChange={e => setNewProject({...newProject, githubUrl: e.target.value})} />
+              <label className="input-label">Repository Access</label>
+              <input type="url" className="input-field" placeholder="https://github.com/..." value={newProject.githubUrl} onChange={e => setNewProject({...newProject, githubUrl: e.target.value})} />
             </div>
             <div className="input-group">
-              <label className="input-label">Live URL (Optional)</label>
-              <input type="url" className="input-field" value={newProject.liveUrl} onChange={e => setNewProject({...newProject, liveUrl: e.target.value})} />
+              <label className="input-label">Live Deployment</label>
+              <input type="url" className="input-field" placeholder="https://..." value={newProject.liveUrl} onChange={e => setNewProject({...newProject, liveUrl: e.target.value})} />
             </div>
-            <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'flex-end' }}>
-              <button type="submit" className="btn btn-primary">Save Project</button>
+            <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <button type="submit" className="btn btn-primary" style={{ padding: '1rem 3rem' }}>Deploy Project Entry</button>
             </div>
           </form>
         </div>
       )}
 
       {loading ? (
-        <p>Loading your masterpiece...</p>
+        <div className="animate-fade-in" style={{ textAlign: 'center', padding: '10rem 0' }}>
+          <div style={{ width: '40px', height: '40px', border: '3px solid var(--glass-border)', borderTopColor: 'var(--accent-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 1.5rem' }}></div>
+          <p style={{ color: 'var(--text-muted)' }}>Synchronizing with Aura database...</p>
+        </div>
       ) : projects.length === 0 ? (
-        <div className="glass-panel" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
-          <h3 style={{ color: 'var(--text-muted)' }}>No projects found.</h3>
-          <p>Click the "New Project" button to start your portfolio.</p>
+        <div className="glass-panel animate-fade-in stagger-2" style={{ textAlign: 'center', padding: '6rem 2rem' }}>
+          <h3 style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>The stage is empty.</h3>
+          <p>Your brilliant work deserves a spotlight. Start by creating your first entry.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '2rem' }}>
-          {projects.map((p) => (
-            <div key={p.id} className="glass-panel" style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '2.5rem' }}>
+          {projects.map((p, index) => (
+            <div key={p.id} className={`glass-panel animate-fade-in stagger-${(index % 4) + 1}`} style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <h3 style={{ fontSize: '1.25rem', paddingRight: '1rem' }}>{p.title}</h3>
                 <button onClick={() => deleteProject(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ff6b6b' }}>
