@@ -1,57 +1,127 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus } from 'lucide-react';
+import { ArrowRight, Mail, Lock, UserIcon } from 'lucide-react';
 
 const Register = () => {
-  const [formData, setFormData] = useState({ fullName: '', email: '', password: '', role: 'STUDENT' });
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    role: 'STUDENT',
+  });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
     try {
       await register(formData);
       navigate('/dashboard');
     } catch (err) {
-      const msg = err.response?.data?.message || 'Registration failed. Email might be in use.';
+      const msg = err.response?.data?.message || 'Registration failed. This email may already be in use.';
       setError(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
+  const update = (key, value) => setFormData({ ...formData, [key]: value });
+
   return (
-    <div className="container animate-fade-in" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 70px)' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '450px' }}>
+    <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 120px)' }}>
+      <div className="card-static animate-scale-in" style={{ width: '100%', maxWidth: '460px' }}>
+
+        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <UserPlus size={48} color="var(--accent-primary)" className="title-glow" style={{ marginBottom: '1rem' }} />
-          <h2>Join PortfolioHub</h2>
-          <p style={{ color: 'var(--text-muted)' }}>Create your student portfolio today</p>
+          <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Create your account</h2>
+          <p style={{ color: 'var(--color-text-400)', fontSize: '0.9rem' }}>
+            Start building your professional portfolio today
+          </p>
         </div>
-        
-        {error && <div style={{ background: 'rgba(255,0,0,0.1)', padding: '0.75rem', borderRadius: '8px', color: '#ff6b6b', marginBottom: '1.5rem', textAlign: 'center', border: '1px solid rgba(255,0,0,0.2)' }}>{error}</div>}
 
+        {/* Error */}
+        {error && (
+          <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>
+            {error}
+          </div>
+        )}
+
+        {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label className="input-label">Full Name</label>
-            <input type="text" required className="input-field" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} placeholder="Jane Doe" />
+          <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+            <label className="form-label">Full Name</label>
+            <div style={{ position: 'relative' }}>
+              <UserIcon size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-400)' }} />
+              <input
+                type="text"
+                required
+                className="form-input"
+                style={{ paddingLeft: '2.5rem' }}
+                value={formData.fullName}
+                onChange={(e) => update('fullName', e.target.value)}
+                placeholder="Jane Doe"
+              />
+            </div>
           </div>
 
-          <div className="input-group">
-            <label className="input-label">Email Address</label>
-            <input type="email" required className="input-field" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="student@university.edu" />
-          </div>
-          
-          <div className="input-group">
-            <label className="input-label">Password</label>
-            <input type="password" required className="input-field" value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} placeholder="••••••••" />
+          <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+            <label className="form-label">Email</label>
+            <div style={{ position: 'relative' }}>
+              <Mail size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-400)' }} />
+              <input
+                type="email"
+                required
+                className="form-input"
+                style={{ paddingLeft: '2.5rem' }}
+                value={formData.email}
+                onChange={(e) => update('email', e.target.value)}
+                placeholder="you@university.edu"
+              />
+            </div>
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>Create Account</button>
+          <div className="form-group" style={{ marginBottom: '2rem' }}>
+            <label className="form-label">Password</label>
+            <div style={{ position: 'relative' }}>
+              <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-400)' }} />
+              <input
+                type="password"
+                required
+                className="form-input"
+                style={{ paddingLeft: '2.5rem' }}
+                value={formData.password}
+                onChange={(e) => update('password', e.target.value)}
+                placeholder="Min 6 characters"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ width: '100%', padding: '0.85rem', fontSize: '0.95rem' }}
+            disabled={loading}
+          >
+            {loading ? (
+              <div className="spinner" style={{ width: '18px', height: '18px', borderWidth: '2px' }} />
+            ) : (
+              <>Create Account <ArrowRight size={16} /></>
+            )}
+          </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '2rem', color: 'var(--text-muted)", fontSize: "0.875rem' }}>
-          Already have an account? <Link to="/login" style={{ color: 'var(--accent-primary)', textDecoration: 'none' }}>Log in</Link>
+        <hr className="divider" style={{ margin: '2rem 0' }} />
+
+        <p style={{ textAlign: 'center', color: 'var(--color-text-400)', fontSize: '0.85rem' }}>
+          Already have an account?{' '}
+          <Link to="/login" style={{ color: 'var(--color-brand-light)', fontWeight: '600' }}>
+            Sign in
+          </Link>
         </p>
       </div>
     </div>
